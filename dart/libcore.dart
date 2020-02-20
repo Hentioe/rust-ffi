@@ -1,9 +1,21 @@
-import 'dart:ffi' as ffi;
+import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 
-typedef hello_rust_func = ffi.Void Function();
-typedef HelloRust = void Function();
-final dylib = ffi.DynamicLibrary.open('lib/libcore.so');
+final dylib = DynamicLibrary.open('lib/libcore.so');
 
-final HelloRust hello_rust = dylib
-   .lookup<ffi.NativeFunction<hello_rust_func>>('hello_rust')
+typedef hello_func = Void Function();
+typedef str_func = Pointer<Utf8> Function();
+typedef echo_func = Pointer<Utf8> Function(Pointer<Utf8> str);
+
+typedef Hello = void Function();
+typedef Echo = Pointer<Utf8> Function(Pointer<Utf8> str);
+
+final Hello call_hello = dylib
+   .lookup<NativeFunction<hello_func>>('hello')
    .asFunction();
+
+final strPointer = dylib.lookup<NativeFunction<str_func>>('str');
+final call_str = strPointer.asFunction<str_func>();
+
+final echoPointer = dylib.lookup<NativeFunction<echo_func>>('echo');
+final call_echo = echoPointer.asFunction<echo_func>();
