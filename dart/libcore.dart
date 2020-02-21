@@ -5,19 +5,41 @@ final dylib = DynamicLibrary.open('lib/libcore.so');
 
 typedef hello_func = Void Function();
 typedef str_func = Pointer<Utf8> Function();
-typedef echo_func = Void Function(Pointer<Utf8> str);
+typedef echo_func = Void Function(Pointer<Utf8> s);
 
 typedef Hello = void Function();
-typedef Echo = void Function(Pointer<Utf8> str);
+typedef Echo = void Function(Pointer<Utf8> s);
 
-final Hello call_hello = dylib
+final Hello callHello = dylib
    .lookup<NativeFunction<hello_func>>('hello')
    .asFunction();
 
-final call_str = dylib
+final callStr = dylib
   .lookup<NativeFunction<str_func>>('str')
   .asFunction<str_func>();
 
-final Echo call_echo = dylib
+final Echo callEcho = dylib
   .lookup<NativeFunction<echo_func>>('echo')
+  .asFunction();
+
+class Coordinate extends Struct {
+  @Double()
+  double latitude;
+  @Double()
+  double longitude;
+}
+
+typedef create_coordinate_func = Pointer<Coordinate> Function(
+  Double latitude, Double longitude);  
+typedef drop_coordinate_func = Void Function(Pointer<Coordinate>);
+
+typedef CreateCoordinate = Pointer<Coordinate> Function(
+  double latitude, double longitude);
+typedef DropCoordinate = void Function(Pointer<Coordinate>);
+
+final CreateCoordinate callCreateCoordinate = dylib
+  .lookup<NativeFunction<create_coordinate_func>>('create_coordinate')
+  .asFunction();
+final DropCoordinate callDropCoordinate = dylib
+  .lookup<NativeFunction<drop_coordinate_func>>('drop_coordinate')
   .asFunction();
