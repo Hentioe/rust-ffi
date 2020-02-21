@@ -5,16 +5,20 @@ final dylib = DynamicLibrary.open('lib/libcore.so');
 
 typedef hello_func = Void Function();
 typedef str_func = Pointer<Utf8> Function();
-typedef echo_func = Void Function(Pointer<Utf8> s);
+typedef free_str_func = Void Function(Pointer<Utf8>);
+typedef echo_func = Void Function(Pointer<Utf8>);
 
 typedef Hello = void Function();
-typedef Echo = void Function(Pointer<Utf8> s);
+typedef FreeStr = void Function(Pointer<Utf8>);
+typedef Echo = void Function(Pointer<Utf8>);
 
 final Hello hello =
     dylib.lookup<NativeFunction<hello_func>>('hello').asFunction();
 
 final str =
     dylib.lookup<NativeFunction<str_func>>('str').asFunction<str_func>();
+final FreeStr free_str =
+    dylib.lookup<NativeFunction<free_str_func>>('free_str').asFunction();
 
 final Echo echo = dylib.lookup<NativeFunction<echo_func>>('echo').asFunction();
 
@@ -54,3 +58,8 @@ final nums =
     dylib.lookup<NativeFunction<nums_func>>('nums').asFunction<nums_func>();
 final FreeNums freeNums =
     dylib.lookup<NativeFunction<free_nums_func>>('free_nums').asFunction();
+
+typedef sum_func = Int32 Function(Pointer<Int32> nums, Int32 len);
+typedef Sum = int Function(Pointer<Int32> nums, int len);
+
+final Sum sum = dylib.lookup<NativeFunction<sum_func>>('sum').asFunction();

@@ -1,7 +1,8 @@
-use libc::{c_char, c_double, c_int};
+use libc::{c_char, c_double, c_int, size_t};
 use std::{
     boxed::Box,
     ffi::{CStr, CString},
+    slice,
 };
 
 #[no_mangle]
@@ -12,6 +13,13 @@ pub extern "C" fn hello() {
 #[no_mangle]
 pub extern "C" fn str() -> CString {
     CString::new("String from Rust!").expect("CString::new failed")
+}
+
+#[no_mangle]
+pub extern "C" fn free_str(ptr: *mut c_char) {
+    unsafe {
+        CString::from_raw(ptr);
+    }
 }
 
 #[no_mangle]
@@ -69,4 +77,10 @@ pub extern "C" fn free_nums(ptr: *mut Nums) {
         let nums = Box::from_raw(ptr);
         std::mem::drop(Box::from_raw(nums.data));
     }
+}
+
+#[no_mangle]
+pub extern "C" fn sum(nums_ptr: *const c_int, len: size_t) -> c_int {
+    let nums = unsafe { slice::from_raw_parts(nums_ptr, len as usize) };
+    (*nums).iter().fold(0, |p, n| p + n)
 }

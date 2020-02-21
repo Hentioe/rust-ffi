@@ -2,13 +2,16 @@ import 'libcore.dart' as libcore;
 import 'dart:ffi';
 import 'dart:io';
 import 'package:ffi/ffi.dart';
+import 'dart:typed_data';
 
 void main() {
   // Hello, World
   libcore.hello();
   // 接收字符串
-  var str = Utf8.fromUtf8(libcore.str());
+  var strPointer = libcore.str();
+  var str = Utf8.fromUtf8(strPointer);
   print(str);
+  libcore.free_str(strPointer);
   // 输入字符串
   libcore.echo(Utf8.toUtf8("Call from Dart!"));
   // 接收 Struct
@@ -27,4 +30,12 @@ void main() {
   print('len: $len');
   print('list: $list');
   libcore.freeNums(numsPointer);
+  // 输入数组
+  var int32Pointer = allocate<Int32>(count: 3);
+  int32Pointer.value = 1;
+  int32Pointer[1] = 2;
+  int32Pointer[2] = 3;
+  var sum = libcore.sum(int32Pointer, 3);
+  print('sum: $sum');
+  free(int32Pointer);
 }
