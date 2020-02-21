@@ -1,5 +1,6 @@
 import 'libcore.dart' as libcore;
 import 'dart:ffi';
+import 'dart:io';
 import 'package:ffi/ffi.dart';
 
 void main() {
@@ -16,5 +17,14 @@ void main() {
   print('lat: ${coordinate.latitude}');
   print('lon: ${coordinate.longitude}');
   // 释放 Struct 内存
-  libcore.dropCoordinate(coordinatePointer);
+  libcore.freeCoordinate(coordinatePointer);
+  // 接收数组
+  var numsPointer = libcore.nums();
+  var nums = numsPointer.ref;
+  var len = nums.len;
+  var data = nums.data;
+  var list = data.asTypedList(len);
+  print('len: $len');
+  print('list: $list');
+  libcore.freeNums(numsPointer);
 }

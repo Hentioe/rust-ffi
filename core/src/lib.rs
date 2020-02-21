@@ -1,6 +1,8 @@
-use libc::{c_char, c_double};
-use std::boxed::Box;
-use std::ffi::{CStr, CString};
+use libc::{c_char, c_double, c_int};
+use std::{
+    boxed::Box,
+    ffi::{CStr, CString},
+};
 
 #[no_mangle]
 pub extern "C" fn hello() {
@@ -26,7 +28,7 @@ pub struct Coordinate {
 }
 
 #[no_mangle]
-pub extern "C" fn drop_coordinate(x: *mut Coordinate) {
+pub extern "C" fn free_coordinate(x: *mut Coordinate) {
     unsafe {
         Box::from_raw(x);
     }
@@ -39,4 +41,32 @@ pub extern "C" fn create_coordinate(latitude: c_double, longitude: c_double) -> 
         longitude,
     };
     Box::into_raw(Box::new(c))
+}
+
+#[repr(C)]
+pub struct Nums {
+    pub len: usize,
+    pub data: *mut c_int,
+}
+
+#[no_mangle]
+pub extern "C" fn nums() -> *mut Nums {
+    let mut data = vec![1, 2, 3].into_boxed_slice();
+    let data_ptr = data.as_mut_ptr();
+    let len = data.len();
+    let nums = Nums {
+        len,
+        data: data_ptr,
+    };
+    std::mem::forget(data);
+
+    Box::into_raw(Box::new(nums))
+}
+
+#[no_mangle]
+pub extern "C" fn free_nums(ptr: *mut Nums) {
+    unsafe {
+        let nums = Box::from_raw(ptr);
+        std::mem::drop(Box::from_raw(nums.data));
+    }
 }
