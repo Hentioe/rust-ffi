@@ -27,4 +27,4 @@ make buildlib
 make run
 ```
 
-本项目日后会加入各种编程语言、并围绕以 Rust FFI 为主来添加代码。本页面举例的 Dart FFI 调用也是一种 Rust 参与 Flutter 技术栈的证明和参考。
+本项目日后会加入作者可能用到的围绕 core 项目的进行调用的各种编程语言代码，而本页面的举例也是一种 Rust 参与 Flutter 技术栈的证明和参考。
