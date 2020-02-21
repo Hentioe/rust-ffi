@@ -10,15 +10,15 @@ typedef echo_func = Void Function(Pointer<Utf8> s);
 typedef Hello = void Function();
 typedef Echo = void Function(Pointer<Utf8> s);
 
-final Hello callHello = dylib
+final Hello hello = dylib
    .lookup<NativeFunction<hello_func>>('hello')
    .asFunction();
 
-final callStr = dylib
+final str = dylib
   .lookup<NativeFunction<str_func>>('str')
   .asFunction<str_func>();
 
-final Echo callEcho = dylib
+final Echo echo = dylib
   .lookup<NativeFunction<echo_func>>('echo')
   .asFunction();
 
@@ -37,9 +37,9 @@ typedef CreateCoordinate = Pointer<Coordinate> Function(
   double latitude, double longitude);
 typedef DropCoordinate = void Function(Pointer<Coordinate>);
 
-final CreateCoordinate callCreateCoordinate = dylib
+final CreateCoordinate createCoordinate = dylib
   .lookup<NativeFunction<create_coordinate_func>>('create_coordinate')
   .asFunction();
-final DropCoordinate callDropCoordinate = dylib
+final DropCoordinate dropCoordinate = dylib
   .lookup<NativeFunction<drop_coordinate_func>>('drop_coordinate')
   .asFunction();
