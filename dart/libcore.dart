@@ -51,15 +51,32 @@ class Nums extends Struct {
 }
 
 typedef nums_func = Pointer<Nums> Function();
-typedef free_nums_func = Void Function(Pointer<Nums>);
-typedef FreeNums = void Function(Pointer<Nums>);
+typedef free_int_array_func = Void Function(Pointer<Nums>);
+typedef FreeIntArray = void Function(Pointer<Nums>);
 
 final nums =
     dylib.lookup<NativeFunction<nums_func>>('nums').asFunction<nums_func>();
-final FreeNums freeNums =
-    dylib.lookup<NativeFunction<free_nums_func>>('free_nums').asFunction();
+final FreeIntArray freeIntArray = dylib
+    .lookup<NativeFunction<free_int_array_func>>('free_int_array')
+    .asFunction();
 
 typedef sum_func = Int32 Function(Pointer<Int32> nums, Int32 len);
 typedef Sum = int Function(Pointer<Int32> nums, int len);
 
 final Sum sum = dylib.lookup<NativeFunction<sum_func>>('sum').asFunction();
+
+class Names extends Struct {
+  @Int32()
+  int len;
+  Pointer<Pointer<Utf8>> data;
+}
+
+typedef names_func = Pointer<Names> Function();
+final names =
+    dylib.lookup<NativeFunction<names_func>>('names').asFunction<names_func>();
+
+typedef free_names_func = Void Function(Pointer<Names>);
+typedef FreeNames = void Function(Pointer<Names>);
+final FreeNames freeNames = dylib
+    .lookup<NativeFunction<free_names_func>>('free_string_array')
+    .asFunction();
