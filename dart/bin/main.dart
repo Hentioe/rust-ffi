@@ -59,6 +59,8 @@ void main() {
     var errBuf = Utf8.toUtf8("");
     libcore.lastErrorMessage(errBuf, errLen);
     print('Error calling div: ${Utf8.fromUtf8(errBuf)}');
+    // 释放错误错误字符串缓存
+    free(errBuf);
   } else {
     print('div($n1, $n2): $r');
   }
