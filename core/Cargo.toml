@@ -11,3 +11,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 libc = "0.2.67"
+failure = "0.1.7"

@@ -1,11 +1,10 @@
-import 'libcore.dart' as libcore;
+import 'package:dart/libcore.dart' as libcore;
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'dart:typed_data';
 import 'dart:io';
 
 void main() {
-  // Hello, World
+  // Hello, world
   libcore.hello();
   // 接收字符串
   var strPointer = libcore.str();
@@ -50,6 +49,19 @@ void main() {
   }
   print('names_list: $names_list');
   libcore.freeNames(namesPointer);
+  // 调用函数并检查错误
+  var n1 = 99;
+  var n2 = 0;
+  var r = libcore.div(n1, n2);
+  var errLen = libcore.lastErrorLength();
+  if (errLen > 0) {
+    // 发生错误
+    var errBuf = Utf8.toUtf8("");
+    libcore.lastErrorMessage(errBuf, errLen);
+    print('Error calling div: ${Utf8.fromUtf8(errBuf)}');
+  } else {
+    print('div($n1, $n2): $r');
+  }
 }
 
 void memtesting(Function() f, {count: 9999999}) {

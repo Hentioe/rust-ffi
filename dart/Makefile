@@ -4,7 +4,7 @@ LIB_PATH ?= "../core"
 buildlib:
 	@( cd $(LIB_PATH) && $(CARGO_BIN) build --release )
 	@mkdir lib -p
-	@cp $(LIB_PATH)/target/release/libcore.so lib/
+	@cp $(LIB_PATH)/target/release/libcore.so libraries/
 
 run:
-	@dart main.dart
+	@pub run main.dart

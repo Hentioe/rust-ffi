@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 
-final dylib = DynamicLibrary.open('lib/libcore.so');
+final dylib = DynamicLibrary.open('libraries/libcore.so');
 
 typedef hello_func = Void Function();
 typedef str_func = Pointer<Utf8> Function();
@@ -80,3 +80,20 @@ typedef FreeNames = void Function(Pointer<Names>);
 final FreeNames freeNames = dylib
     .lookup<NativeFunction<free_names_func>>('free_string_array')
     .asFunction();
+
+typedef last_error_length_func = Int32 Function();
+typedef LastErrorLength = int Function();
+final LastErrorLength lastErrorLength = dylib
+    .lookup<NativeFunction<last_error_length_func>>('last_error_length')
+    .asFunction();
+
+typedef last_error_message_func = Int32 Function(
+    Pointer<Utf8> buffer, Int32 length);
+typedef LastErrorMessage = int Function(Pointer<Utf8> buffer, int length);
+final LastErrorMessage lastErrorMessage = dylib
+    .lookup<NativeFunction<last_error_message_func>>('last_error_message')
+    .asFunction();
+
+typedef div_func = Int32 Function(Int32 n1, Int32 n2);
+typedef Div = int Function(int n1, int n2);
+final Div div = dylib.lookup<NativeFunction<div_func>>('div').asFunction();
